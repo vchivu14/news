@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>News</title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link th:href="@{/css/main.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" th:href="@{/}">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+<!--                <a class="navbar-brand" th:href="@{/news}">My News</a>-->
+            </ul>
+            <div class="navbar-nav">
+            <span class="icon-bar">
+                <li class="nav-item">
+                    <a class="btn btn-outline-danger" href="#">Login</a>
+                    <a class="btn btn-outline-danger" href="#">Logout</a>
+                </li>
+            </span>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<br>
+<br>
+
+<div>
+
+    <div class="row">
+
+        <div class="col-md-2 col-md-offset-3">
+            <div id="secondContainer">
+                <section class="container">
+                    <br>
+                    <br>
+                    <h6>Filter</h6>
+                    <div class="content-section">
+                        <form class="form" th:action="@{/sorted}" method="post">
+                            <div class="row">
+                                <div class="col-md-12 col-md-offset-3">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            <b>Authors</b>
+                                        </label>
+                                        <select class="form-control" name="author">
+                                            <option value="null"> Select </option>
+                                            <option th:each="a : ${authors}" th:text="${a.name}" th:value="${a.name}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-md-offset-3">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            <b>Categories</b>
+                                        </label>
+                                        <select class="form-control" name="category">
+                                            <option value="null"> Select </option>
+                                            <option th:each="c : ${categories}"
+                                                    th:text="${c.name}" th:value="${c.name}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-md-offset-3">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            <b>Languages</b>
+                                        </label>
+                                        <select class="form-control" name="language">
+                                            <option value="null"> Select </option>
+                                            <option th:each="l : ${languages}" th:text="${l.name}" th:value="${l.name}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-md-offset-3">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            <b>Sources</b>
+                                        </label>
+                                        <select class="form-control" name="source">
+                                            <option value="null"> Select </option>
+                                            <option th:each="s : ${sources}" th:text="${s.name}" th:value="${s.name}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-md-offset-3">
+                                    <div class="row">
+                                        <button type="submit" class="btn btn-success custom-button">Submit</button>
+                                        <button type="reset" class="btn btn-danger custom-button">Clear</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="col-md-8 col-md-offset-3">
+            <div id="firstContainer">
+                <section class="container">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <h6>Search</h6>
+                            <label>
+                                <input id="myInput" class="light-table-filter" data-table="order-table" placeholder="Title" type="search">
+                            </label>
+                        </div>
+                        <div class="col-md-10">
+                            <h6>Sort</h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <a class="btn btn-primary custom-button-center-left" aria-pressed="true" role="button"
+                                       th:href="@{/news(sort='published')}"> by Date
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a class="btn btn-primary custom-button-center-left" aria-pressed="true" role="button"
+                                       th:href="@{/news(sort='author')}"> by Author
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        <div class="data-div-el" th:each="newsDTO : ${newsList}">
+                            <article class="media content-section">
+                                <img class="rounded-circle article-img" th:href="${newsDTO.image}">
+                                <div class="media-body">
+                                    <div class="article-metadata">
+                                        <a class="mr-2" th:text="${newsDTO.author}"></a>
+                                        <a class="mr-2" th:text="${newsDTO.category}"></a>
+                                        <a class="mr-2" th:text="${newsDTO.country}"></a>
+                                        <small class="text-muted" th:text="${newsDTO.published_at}"></small>
+                                        <a class="mr-2" th:text="${newsDTO.source}"></a>
+                                    </div>
+                                    <h4 class="article-title data-div-el-title" th:text="${newsDTO.title}" th:value="${newsDTO.title}"></h4>
+                                    <p class="article-content data-div-el-text" th:text="${newsDTO.description}" th:value="${newsDTO.description}"></p>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+
+                    <div th:fragment="paginationbar">
+                        <div class="pagination pagination-centered">
+                            <ul class="pagination justify-content-center flex-wrap">
+                                <li>
+                                    <a th:if="${currentPage != 0}" th:href="@{/news(page=0)}" class="page-link custom-button">First</a>
+                                </li>
+                                <li>
+                                    <a th:if="${currentPage != 0}" th:href="@{/news(page=${currentPage - 1})}" class="page-link custom-button">Previous</a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/news(page=${currentPage})}" th:text="${'Page: ' + (currentPage+1)}" class="page-link custom-button">Current</a>
+                                </li>
+                                <li>
+                                    <a th:if="${currentPage + 1 != totalPages}" th:href="@{/news(page=${currentPage + 1})}" class="page-link custom-button">Next</a>
+                                </li>
+                                <li>
+                                    <a th:if="${totalPages != 1}" th:href="@{/news(page=${totalPages - 1})}" class="page-link custom-button">Last</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/filterForTable.js}"></script>
+
+</body>
+</html>
